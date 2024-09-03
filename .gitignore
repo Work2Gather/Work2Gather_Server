@@ -71,14 +71,31 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-# Mac DS_Store 
+# Ignore Plugins
+Assets/Plugins/*
+Assets/Packages/*
+Assets/Resources/*
+Assets/ResourcesHelper/*
+Assets/FmodProject/*
+Assets/ARTnGAME/*
+Assets/BundleDemos/*
+Assets/Feel/*
+Assets/Pixel\ Crushers/*
+Assets/Editor\ Default\ Resources/*
+Assets/Gizmos/*
+Assets/UserData.json
+
+# Ignore Desktop Services Store (macOS file format)
 .DS_Store
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
 
-# VScode
-.vscode/*
+# Ignore JetBrains Rider
+.idea
+
+# Ignore VScode
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -90,3 +107,9 @@ crashlytics-build.properties
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Edit from devs
+.fmod_editor.log
+Assets/UserData.json
+
+# End of https://www.toptal.com/developers/gitignore/api/unity

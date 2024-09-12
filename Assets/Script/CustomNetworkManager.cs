@@ -2,28 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Unity.VisualScripting;
 
 public class CustomNetworkManager : MonoBehaviour
 {
-    // NetworkManager를 참조하기 위한 변수
     private NetworkManager networkManager;
-    [SerializeField] GameObject PlayerObject;
+    [SerializeField] GameObject PlayerPrefab;
 
-    // Start is called before the first frame update
     void Start()
     {
-        // // NetworkManager 컴포넌트를 가져옴
         networkManager = GetComponent<NetworkManager>();
 
-        // // 서버가 시작될 때 호출될 콜백 등록
-        networkManager.OnServerStarted += OnServerStarted;
+        // 서버가 시작되었을 때 호출될 콜백 등록
+        networkManager.OnServerStarted += HandleServerStarted;
 
-        // // 클라이언트가 연결될 때 호출될 콜백 등록
+        // 클라이언트가 연결되었을 때 호출될 콜백 등록
         networkManager.OnClientConnectedCallback += OnClientConnected;
+    }
 
-        // // 서버를 시작
-        // StartServer();
+    // 서버가 시작되었을 때 호출될 함수
+    private void HandleServerStarted()
+    {
+        Debug.Log("서버가 시작되었습니다.");
+    }
+
+    // 클라이언트가 연결되었을 때 호출될 함수
+    private void OnClientConnected(ulong clientId)
+    {
+        if (NetworkManager.Singleton.IsServer)
+        {
+            InstantiatePlayer(clientId);
+        }
+    }
+
+    // 플레이어를 스폰하는 함수
+    private void InstantiatePlayer(ulong clientId)
+    {
+        GameObject playerInstance = Instantiate(PlayerPrefab);
+        NetworkObject networkObject = playerInstance.GetComponent<NetworkObject>();
+
+        // 플레이어를 네트워크에 등록하고 클라이언트에 동기화
+        networkObject.SpawnAsPlayerObject(clientId);
     }
 
     // 서버를 시작하는 함수
@@ -40,28 +58,5 @@ public class CustomNetworkManager : MonoBehaviour
     public void StartClient()
     {
         networkManager.StartClient();
-    }
-
-    private void InstantiatePlayer()
-    {
-        Instantiate(PlayerObject);
-    }
-
-    // 서버가 시작되었을 때 호출될 함수
-    public void OnServerStarted()
-    {
-        Debug.Log("서버가 시작되었습니다.");
-    }
-
-    // 클라이언트가 연결되었을 때 호출될 함수
-    private void OnClientConnected(ulong clientId)
-    {
-        InstantiatePlayer();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
